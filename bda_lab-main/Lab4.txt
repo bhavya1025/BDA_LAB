@@ -1,0 +1,80 @@
+HDFS COMMANDS
+
+
+1)
+hduser@bmsce-Precision-T1700:~$ start-all.sh
+
+
+2)
+hduser@bmsce-Precision-T1700:~$ jps
+6337 ResourceManager
+5957 DataNode
+5785 NameNode
+6170 SecondaryNameNode
+7323 NodeManager
+7740 Jps
+
+
+3)mkdir
+hduser@bmsce-Precision-T1700:~$ hdfs dfs -mkdir /test
+
+
+4)ls
+hduser@bmsce-Precision-T1700:~$ hdfs dfs -ls /
+Found 1 items
+
+drwxr-xr-x   - hduser supergroup          0 2022-06-06 11:33 /test
+
+
+5)put
+hduser@bmsce-Precision-T1700:~$ hdfs dfs -put /home/hduser/Desktop/hello.txt /test/hello.txt
+
+
+6)copyFromLocal
+hduser@bmsce-Precision-T1700:~$ hdfs dfs -copyFromLocal /home/hduser/Desktop/hello.txt /test/hello1.txt
+
+
+7)cat
+hduser@bmsce-Precision-T1700:~$ hdfs dfs -cat /test/hello.txt
+Hello, World!
+
+
+8)get
+hduser@bmsce-Precision-T1700:~$ hdfs dfs -get /test/hello.txt /home/hduser/Desktop/hello1.txt
+
+
+9)copyToLocal
+hduser@bmsce-Precision-T1700:~$ hdfs dfs -copyToLocal /test/hello.txt /home/hduser/Desktop/copied.txt
+
+
+10)getmerge
+hduser@bmsce-Precision-T1700:~$ hdfs dfs -getmerge /test/hello.txt /test/hello1.txt /home/hduser/Desktop/merged.txt
+
+
+11)getfacl
+hduser@bmsce-Precision-T1700:~$ hdfs dfs -getfacl /test
+
+# file: /test
+# owner: hduser
+# group: supergroup
+user::rwx
+group::r-x
+other::r-x
+
+
+12)mv
+hduser@bmsce-Precision-T1700:~$ hdfs dfs -mkdir /FFF
+hduser@bmsce-Precision-T1700:~$ hdfs dfs -mv /test /FFF
+hduser@bmsce-Precision-T1700:~$ hdfs dfs -ls /FFF
+Found 1 items
+drwxr-xr-x   - hduser supergroup          0 2022-06-06 11:50 /FFF/test
+
+
+13)cp
+hduser@bmsce-Precision-T1700:~$ hdfs dfs -mkdir /GGG
+hduser@bmsce-Precision-T1700:~$ hdfs dfs -cp /FFF/test/ /GGG
+
+
+
+
+

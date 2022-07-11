@@ -1,0 +1,79 @@
+LAB - 2 CASSANDRA COMMANDS
+
+Perform the following DB operations using Cassandra.
+
+
+1. Create a keyspace by name Employee
+
+cqlsh> create keyspace Employee with replication = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 };
+
+
+2. Create a column family by name Employee-Info with attributes Emp_Id Primary Key, Emp_Name, Designation, Date_of_Joining, Salary, Dept_Name
+
+cqlsh> use employee;
+cqlsh:employee> create table Employee_info (
+            ... emp_id int primary key,
+            ... emp_name text,
+            ... designation text,
+            ... doj timestamp,
+            ... salary double,
+            ... dept_name text
+            ... );
+
+
+3. Insert the values into the table in batch
+
+cqlsh:employee> begin batch
+            ... insert into Employee_info(emp_id, emp_name, designation, doj, salary, dept_name) values (111, 'adarsh', 'developer', '2022-06-06', 2000000, 'development');
+            ... insert into Employee_info(emp_id, emp_name, designation, doj, salary, dept_name) values (121, 'anvitha', 'analyst', '2022-06-07', 2000000, 'business');
+            ... insert into Employee_info(emp_id, emp_name, designation, doj, salary, dept_name) values (131, 'abhi', 'researcher', '2022-06-08', 2000000, 'research');
+            ... apply batch;
+cqlsh:employee> select * from Employee_info;
+
+ emp_id | dept_name   | designation | doj                             | emp_name | salary
+--------+-------------+-------------+---------------------------------+----------+--------
+    111 | development |   developer | 2022-06-05 18:30:00.000000+0000 |   adarsh |  2e+06
+    121 |    business |     analyst | 2022-06-06 18:30:00.000000+0000 |  anvitha |  2e+06
+    131 |    research |  researcher | 2022-06-07 18:30:00.000000+0000 |     abhi |  2e+06
+
+(3 rows)
+
+
+4. Update Employee name and Department of Emp-Id 121
+
+cqlsh:employee> update Employee_info set emp_name = 'ram', dept_name = 'strategy' where emp_id = 121;
+cqlsh:employee> select * from Employee_info;
+
+ emp_id | dept_name   | designation | doj                             | emp_name | salary
+--------+-------------+-------------+---------------------------------+----------+--------
+    111 | development |   developer | 2022-06-05 18:30:00.000000+0000 |   adarsh |  2e+06
+    121 |    strategy |     analyst | 2022-06-06 18:30:00.000000+0000 |      ram |  2e+06
+    131 |    research |  researcher | 2022-06-07 18:30:00.000000+0000 |     abhi |  2e+06
+
+(3 rows)
+
+
+5. Alter the schema of the table Employee_Info to add a column Projects which stores a set of Projects done by the corresponding Employee.
+
+cqlsh:employee> alter table Employee_info add projects set<text>;
+
+
+6. Update the altered table to add project names.
+
+cqlsh:employee> update Employee_info set projects = projects + {'abc', 'def'} where emp_id = 111;
+cqlsh:employee> update Employee_info set projects = projects + {'pqr', 'mno'} where emp_id = 121;
+cqlsh:employee> update Employee_info set projects = projects + {'xyz'} where emp_id = 131;
+cqlsh:employee> select * from Employee_info;
+
+ emp_id | dept_name   | designation | doj                             | emp_name | projects       | salary
+--------+-------------+-------------+---------------------------------+----------+----------------+--------
+    111 | development |   developer | 2022-06-05 18:30:00.000000+0000 |   adarsh | {'abc', 'def'} |  2e+06
+    121 |    strategy |     analyst | 2022-06-06 18:30:00.000000+0000 |      ram | {'mno', 'pqr'} |  2e+06
+    131 |    research |  researcher | 2022-06-07 18:30:00.000000+0000 |     abhi |        {'xyz'} |  2e+06
+
+(3 rows)
+
+
+7. Create a TTL of 15 seconds to display the values of Employees.
+
+cqlsh:employee> insert into Employee_info(emp_id, emp_name, designation, doj, salary, dept_name) values (141, 'shyam', 'consultant', '2022-06-10', 1000000, 'technical') using ttl 15;

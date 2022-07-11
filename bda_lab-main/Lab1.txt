@@ -1,0 +1,208 @@
+STUDENT DATABASE
+
+
+> use Students;
+switched to db Students
+
+
+> db.createCollection("Students");
+{ "ok" : 1 }
+
+
+> db.Students.insert({_id:1, StudName: "Adarsh", Grade: "X", Hobbies: ["Cricket", "Movies"], DOJ: Date("2016-05-18")});
+WriteResult({ "nInserted" : 1 })
+
+
+> db.Students.insert({_id:2, StudName: "Anvitha", Grade: "XI", Hobbies: ["Admin Work", "Placement Work"], DOJ: Date("2019-05-18")});
+WriteResult({ "nInserted" : 1 })
+
+
+> db.Students.insert({_id:3, StudName: "Abhinandan", Grade: "XII", Hobbies: ["Troubleshooting"], DOJ: Date("2021-05-18")});
+WriteResult({ "nInserted" : 1 })
+
+
+> db.Students.find().pretty();
+{
+	"_id" : 1,
+	"StudName" : "Adarsh",
+	"Grade" : "X",
+	"Hobbies" : [
+		"Cricket",
+		"Movies"
+	],
+	"DOJ" : "Mon Apr 25 2022 11:40:43 GMT+0530 (IST)"
+}
+{
+	"_id" : 2,
+	"StudName" : "Anvitha",
+	"Grade" : "XI",
+	"Hobbies" : [
+		"Admin Work",
+		"Placement Work"
+	],
+	"DOJ" : "Mon Apr 25 2022 11:42:21 GMT+0530 (IST)"
+}
+{
+	"_id" : 3,
+	"StudName" : "Abhinandan",
+	"Grade" : "XII",
+	"Hobbies" : [
+		"Troubleshooting"
+	],
+	"DOJ" : "Mon Apr 25 2022 11:43:05 GMT+0530 (IST)"
+}
+
+
+
+1) Display only names
+> db.Students.find({}, {StudName:1, _id:0});
+{ "StudName" : "Adarsh" }
+{ "StudName" : "Anvitha" }
+{ "StudName" : "Abhinandan" }
+
+
+2) Display document where _id is 1
+> db.Students.find({_id:1}, {StudName:1, Grade: 1}).pretty();
+{ "_id" : 1, "StudName" : "Adarsh", "Grade" : "X" }
+
+
+3) Display documents where grade not equal to "X"
+> db.Students.find({Grade:{$ne:"X"}}).pretty();
+{
+	"_id" : 2,
+	"StudName" : "Anvitha",
+	"Grade" : "XI",
+	"Hobbies" : [
+		"Admin Work",
+		"Placement Work"
+	],
+	"DOJ" : "Mon Apr 25 2022 11:42:21 GMT+0530 (IST)"
+}
+{
+	"_id" : 3,
+	"StudName" : "Abhinandan",
+	"Grade" : "XII",
+	"Hobbies" : [
+		"Troubleshooting"
+	],
+	"DOJ" : "Mon Apr 25 2022 11:43:05 GMT+0530 (IST)"
+}
+
+
+4) Display documents where Hobbies is cricket and name is Varun
+> db.Students.insert({_id:4,StudName:"Varun",Grade:"VII",Hobbies: ["Cricket", "Badminton"], DOJ: ISODate("2020-05-16")});
+WriteResult({ "nInserted" : 1 })
+
+> db.Students.find({"Hobbies": {$in : ["Cricket"]}, StudName: "Varun"});
+{ "_id" : 4, "StudName" : "Varun", "Grade" : "VII", "Hobbies" : [ "Cricket", "Badminton" ], "DOJ" : ISODate("2020-05-16T00:00:00Z") }
+
+
+5) Display documents where StudName ends with 'a'
+> db.Students.find({StudName: /h$/});
+{ "_id" : 1, "StudName" : "Adarsh", "Grade" : "X", "Hobbies" : [ "Cricket", "Movies" ], "DOJ" : "Mon Apr 25 2022 11:40:43 GMT+0530 (IST)" }
+
+
+
+BANK DATABASE
+
+
+> use Banks;
+switched to db Banks
+
+
+> db.createCollection("Bank");
+{ "ok" : 1 }
+
+
+> db.Bank.insert({Accno: 6006, Accname: "Adarsh", Bal: 10000, transac: [1000, 2000, 3000]});
+WriteResult({ "nInserted" : 1 })
+> db.Bank.insert({Accno: 6007, Accname: "Anvitha", Bal: 11000, transac: [100, 5000, 200]});
+WriteResult({ "nInserted" : 1 })
+> db.Bank.insert({Accno: 6008, Accname: "Abhinandan", Bal: 12000, transac: [500, 6000, 2000]});
+WriteResult({ "nInserted" : 1 })
+
+
+> db.Bank.find().pretty();
+{
+	"_id" : ObjectId("626643a2ef9d321b06d2f46b"),
+	"Accno" : 6006,
+	"Accname" : "Adarsh",
+	"Bal" : 10000,
+	"transac" : [
+		1000,
+		2000,
+		3000
+	]
+}
+{
+	"_id" : ObjectId("626643bcef9d321b06d2f46c"),
+	"Accno" : 6007,
+	"Accname" : "Anvitha",
+	"Bal" : 11000,
+	"transac" : [
+		100,
+		5000,
+		200
+	]
+}
+{
+	"_id" : ObjectId("626643d9ef9d321b06d2f46d"),
+	"Accno" : 6008,
+	"Accname" : "Abhinandan",
+	"Bal" : 12000,
+	"transac" : [
+		500,
+		6000,
+		2000
+	]
+}
+
+
+> var mycursor = db.Bank.find({Accno: 6008});
+> mycursor
+{ "_id" : ObjectId("626643d9ef9d321b06d2f46d"), "Accno" : 6008, "Accname" : "Abhinandan", "Bal" : 12000, "transac" : [ 500, 6000, 2000 ] }
+
+
+> db.Bank.update({Accno:6006}, {$set: {Accname: "Adarsh K N"}});
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+
+
+
+HOSPITAL DATABASE
+
+
+> use Hospitals;
+switched to db Hospitals
+
+
+> db.createCollection("Hospital")
+{ "ok" : 1 }
+
+
+> db.Hospital.insert({_id:1, name: "XYZ", diseases: ["Cough", "Cold"]});
+WriteResult({ "nInserted" : 1 })
+> db.Hospital.insert({_id:2, name: "ABD", diseases: ["Fever"]});
+WriteResult({ "nInserted" : 1 })
+> db.Hospital.insert({_id:3, name: "PQR", diseases: ["Fatigue"]});
+WriteResult({ "nInserted" : 1 })
+
+
+> db.Hospital.find();
+{ "_id" : 1, "name" : "XYZ", "diseases" : [ "Cough", "Cold" ] }
+{ "_id" : 2, "name" : "ABD", "diseases" : [ "Fever" ] }
+{ "_id" : 3, "name" : "PQR", "diseases" : [ "Fatigue" ] }
+
+
+> mycursor = db.Hospital.find({name: "PQR"});
+> mycursor
+{ "_id" : 3, "name" : "PQR", "diseases" : [ "Fatigue" ] }
+
+
+> db.Hospital.update({_id:2}, {$set: {diseases: ["Covid-19"]}});
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.Hospital.find();
+{ "_id" : 1, "name" : "XYZ", "diseases" : [ "Cough", "Cold" ] }
+{ "_id" : 2, "name" : "ABD", "diseases" : [ "Covid-19" ] }
+{ "_id" : 3, "name" : "PQR", "diseases" : [ "Fatigue" ] }
+> 
+
